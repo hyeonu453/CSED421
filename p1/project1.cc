@@ -5,8 +5,8 @@
 #include <set>
 #include <sstream>
 #include <string>
-#include <vector>
 #include <utility>
+#include <vector>
 
 void query1(const char* filename_customer, const char* filename_zonecost);
 void query2(const char* filename_lineitem, const char* filename_product);
@@ -27,7 +27,8 @@ class Table {
       throw std::runtime_error("invalid table");
     }
     for (size_t idx = 0, column_start = 0; idx < value_length.length(); idx++) {
-      if (value_length[idx] == ' ' || idx == value_length.length() - 1) {
+      if (value_length[idx] == ' ' || value_length[idx] == '\0' ||
+          value_length[idx] == '\n' || idx == value_length.length() - 1) {
         column_length.push_back(idx - column_start);
         column_dict[trim(
             column_name.substr(column_start, idx - column_start))] = idx_cnt;
