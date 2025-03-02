@@ -1,4 +1,5 @@
-// Copyright 2022 Wook-shin Han
+// Copyright 2025 Hyeonu-Cho
+#include <algorithm>
 #include <fstream>
 #include <iostream>
 #include <map>
@@ -11,6 +12,7 @@
 void query1(const char* filename_customer, const char* filename_zonecost);
 void query2(const char* filename_lineitem, const char* filename_product);
 std::string trim(const std::string& str);
+
 class Table {
  private:
   std::map<std::string, int> column_dict;
@@ -103,14 +105,18 @@ void query1(const char* filename_customer, const char* filename_zonecost) {
 void query2(const char* filename_lineitem, const char* filename_product) {
   Table lineitem(filename_lineitem);
   Table product(filename_product);
-  std::set<int> first_set, second_set;
+  std::map<int, std::set<std::string>> first_dict;
+  std::set<int> second_set;
 
   for (size_t i = 0; i < lineitem.size(); i++) {
-    if (first_set.find(std::stoi(lineitem[{i, "BARCODE"}])) ==
-        first_set.end()) {
-      first_set.insert(std::stoi(lineitem[{i, "BARCODE"}]));
-    } else {
-      second_set.insert(std::stoi(lineitem[{i, "BARCODE"}]));
+    if (first_dict[std::stoi(lineitem[{i, "BARCODE"}])].find(
+            lineitem[{i, "UNAME"}]) ==
+        first_dict[std::stoi(lineitem[{i, "BARCODE"}])].end()) {
+      if (first_dict[std::stoi(lineitem[{i, "BARCODE"}])].size() > 0) {
+        second_set.insert(std::stoi(lineitem[{i, "BARCODE"}]));
+      }
+      first_dict[std::stoi(lineitem[{i, "BARCODE"}])].insert(
+          lineitem[{i, "UNAME"}]);
     }
   }
 
